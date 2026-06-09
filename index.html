@@ -334,6 +334,13 @@
     .reveal.visible { opacity: 1; transform: none; }
   </style>
 </head>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+emailjs.init({
+    publicKey: "YOUR_PUBLIC_KEY"
+});
+</script>
 <body>
 
 <!-- NAV -->
@@ -623,7 +630,7 @@
       <label>Project Details</label>
       <textarea placeholder="Describe your project — material, dimensions, quantity, design requirements…"></textarea>
     </div>
-    <button class="btn-primary" style="width:100%; padding:1.1rem;" onclick="alert('Thank you! We will contact you shortly.')">Send Enquiry →</button>
+    <button class="btn-primary" style="width:100%; padding:1.1rem;" onclick="alert('Thank you! We will contact you shortly.'  onclick="sendEmail() )">Send Enquiry →</button>
   </div>
 </section>
 
@@ -643,28 +650,58 @@
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   reveals.forEach(el => observer.observe(el));
-  function sendToWhatsApp() {
-    const name = document.querySelector('input[type="text"]').value;
-    const phone = document.querySelector('input[type="tel"]').value;
-    const service = document.querySelector('select').value;
-    const details = document.querySelector('textarea').value;
+  function sendEmail() {
 
-    const whatsappNumber = "8247536309"; // Replace with your WhatsApp number
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const service = document.getElementById("service").value;
+    const details = document.getElementById("details").value;
 
-    const message =
-`*New Enquiry - NG Arts*
+    if (!name || !phone) {
+        alert("Please enter your Name and Phone Number.");
+        return;
+    }
 
-👤 Name: ${name}
-📞 Phone: ${phone}
-🛠 Service: ${service}
+    const btn = document.querySelector(".btn-primary");
 
-📝 Project Details:
-${details}`;
+    btn.innerHTML = "Sending...";
+    btn.disabled = true;
 
-    const url = `https://wa.me/${8247536309}?text=${encodeURIComponent(message)}`;
+    emailjs.send(
+        "YOUR_SERVICE_ID",
+        "YOUR_TEMPLATE_ID",
+        {
+            name: name,
+            phone: phone,
+            service: service,
+            details: details,
+            company: "NG Arts"
+        }
+    )
+    .then(function () {
 
-    window.open(url, '_blank');
+        alert("Your enquiry has been sent successfully.");
+
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("service").selectedIndex = 0;
+        document.getElementById("details").value = "";
+
+        btn.innerHTML = "Send Enquiry";
+        btn.disabled = false;
+
+    })
+    .catch(function (error) {
+
+        console.error(error);
+
+        alert("Failed to send enquiry. Please try again.");
+
+        btn.innerHTML = "Send Enquiry";
+        btn.disabled = false;
+    });
 }
+  
 </script>
 
 </body>
