@@ -602,35 +602,44 @@ emailjs.init({
   </div>
 
   <div class="contact-form reveal">
-    <div class="form-row">
-      <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" placeholder="Full name"/>
-      </div>
-      <div class="form-group">
-        <label>Phone</label>
-        <input type="tel" placeholder="+91 00000 00000"/>
-      </div>
-    </div>
+  <div class="form-row">
     <div class="form-group">
-      <label>Service Required</label>
-      <select>
-        <option value="">Select a service…</option>
-        <option>CNC Works</option>
-        <option>Wood Carving</option>
-        <option>Grill Cutting</option>
-        <option>2D Cuttings – MDF</option>
-        <option>2D Cuttings – PVC</option>
-        <option>2D Cuttings – ACP</option>
-        <option>2D Cuttings – PLY</option>
-        <option>Other / Custom</option>
-      </select>
+      <label>Your Name</label>
+      <input type="text" id="name" placeholder="Full name" />
     </div>
+
     <div class="form-group">
-      <label>Project Details</label>
-      <textarea placeholder="Describe your project — material, dimensions, quantity, design requirements…"></textarea>
+      <label>Phone</label>
+      <input type="tel" id="phone" placeholder="+91 00000 00000" />
     </div>
-    <button class="btn-primary" style="width:100%; padding:1.1rem;" onclick="alert('Thank you! We will contact you shortly.'  onclick="sendEmail() )">Send Enquiry →</button>
+  </div>
+
+  <div class="form-group">
+    <label>Service Required</label>
+    <select id="service">
+      <option value="">Select a service…</option>
+      <option>CNC Works</option>
+      <option>Wood Carving</option>
+      <option>Grill Cutting</option>
+      <option>2D Cuttings – MDF</option>
+      <option>2D Cuttings – PVC</option>
+      <option>2D Cuttings – ACP</option>
+      <option>2D Cuttings – PLY</option>
+      <option>Other / Custom</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Project Details</label>
+    <textarea id="details"
+      placeholder="Describe your project — material, dimensions, quantity, design requirements…"></textarea>
+  </div>
+
+  <button class="btn-primary"
+          style="width:100%; padding:1.1rem;"
+          onclick="sendWhatsApp()">
+    Send Enquiry →
+  </button>
   </div>
 </section>
 
@@ -650,59 +659,37 @@ emailjs.init({
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   reveals.forEach(el => observer.observe(el));
-  function sendEmail() {
+  function sendWhatsApp() {
 
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
     const service = document.getElementById("service").value;
     const details = document.getElementById("details").value;
 
-    if (!name || !phone) {
-        alert("Please enter your Name and Phone Number.");
+    if (!name || !phone || !service || !details) {
+        alert("Please fill all fields.");
         return;
     }
 
-    const btn = document.querySelector(".btn-primary");
+    const ownerNumber = "918247536309"; // Replace with your WhatsApp number
 
-    btn.innerHTML = "Sending...";
-    btn.disabled = true;
+    const message =
+`Hello NG Arts,
 
-    emailjs.send(
-        "YOUR_SERVICE_ID",
-        "YOUR_TEMPLATE_ID",
-        {
-           to_email: "utkarshgupta035@gmail.com",
-            name: name,
-            phone: phone,
-            service: service,
-            details: details,
-            company: "NG Arts"
-        }
-    )
-    .then(function () {
+New Quotation Request
 
-        alert("Your enquiry has been sent successfully.");
+Name: ${name}
+Phone: ${phone}
+Service: ${service}
 
-        document.getElementById("name").value = "";
-        document.getElementById("phone").value = "";
-        document.getElementById("service").selectedIndex = 0;
-        document.getElementById("details").value = "";
+Project Details:
+${details}`;
 
-        btn.innerHTML = "Send Enquiry";
-        btn.disabled = false;
+    const whatsappURL =
+      `https://wa.me/${ownerNumber}?text=${encodeURIComponent(message)}`;
 
-    })
-    .catch(function (error) {
-
-        console.error(error);
-
-        alert("Failed to send enquiry. Please try again.");
-
-        btn.innerHTML = "Send Enquiry";
-        btn.disabled = false;
-    });
-}
-  
+    window.open(whatsappURL, "_blank");
+  }
 </script>
 
 </body>
